@@ -1,0 +1,99 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #d9f2f8;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  font-size: 1.6rem;
+  color: rgba(0, 0, 0, 0.477);
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h1 {
+  font-size: 3.2rem;
+  line-height: 1.1;
+  justify-self: left;
+  align-self: start;
+}
+
+table {
+  width: 800px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  text-transform: uppercase;
+
+  & thead {
+    & th {
+      text-align: left;
+      padding-left: 4px;
+      height: 1rem;
+    }
+    & th:nth-child(2) {
+      text-align: center;
+    }
+  }
+  & tbody {
+    & td,
+    th {
+      border: 1px solid rgba(66, 66, 66, 0.274);
+      padding-block: 2rem;
+      text-align: center;
+    }
+    & th {
+      width: 5rem;
+
+      &:nth-child(2) {
+        background-color: #6e6f70;
+        border-bottom: 1px solid white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        &:hover {
+          background-color: #6e6f705f;
+        }
+        & img {
+          width: 2rem;
+          height: 2rem;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.table-buttons {
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  & button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #6e6f705f;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #6e6f70;
+    }
+  }
+}
