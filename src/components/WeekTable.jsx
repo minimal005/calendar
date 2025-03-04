@@ -1,11 +1,30 @@
-import { WEEKS } from "../helpers/constants";
+import { useState } from "react";
 import { useSchedule } from "../hooks/useSchedule";
 
 export const WeekTable = () => {
   const { schedule, toggleHour, toggleAllDay } = useSchedule();
+  const [isDragging, setIsDragging] = useState(false);
 
+  if (!schedule || Object.keys(schedule).length === 0) {
+    return <p>Loading...</p>;
+  }
+
+  const handleMouseDown = (day, hour) => {
+    setIsDragging(true);
+    toggleHour(day, hour);
+  };
+
+  const handleMouseEnter = (day, hour) => {
+    if (isDragging) {
+      toggleHour(day, hour);
+    }
+  };
   return (
-    <table className="table">
+    <table
+      className="table"
+      onMouseUp={() => setIsDragging(false)}
+      onMouseLeave={() => setIsDragging(false)}
+    >
       <thead>
         <tr>
           <th></th>
@@ -31,14 +50,25 @@ export const WeekTable = () => {
         </tr>
       </thead>
       <tbody>
-        {WEEKS.map((day) => (
+        {Object.keys(schedule).map((day) => (
           <tr key={day}>
             <th>{day}</th>
-            <th>
+            <th onClick={() => toggleAllDay(day)}>
               <img src="./check.png" alt="all-day" />
             </th>
-            {[...Array(24)].map((_, index) => (
-              <td key={index}></td>
+            {[...Array(24)].map((_, hour) => (
+              <td
+                key={hour}
+                onMouseDown={() => handleMouseDown(day, hour)}
+                onMouseEnter={() => handleMouseEnter(day, hour)}
+                style={{
+                  backgroundColor: schedule[day].some(
+                    ({ bt, et }) => bt / 60 <= hour && et / 60 > hour
+                  )
+                    ? "darkgray"
+                    : "#d9f2f8",
+                }}
+              ></td>
             ))}
           </tr>
         ))}
