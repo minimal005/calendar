@@ -5,10 +5,10 @@ export const TableButtons = () => {
 
   return (
     <div className="table-buttons">
-      <button text="Clear" onClick={() => clearSchedule()}>
+      <button text="Clear" onClick={clearSchedule}>
         Clear
       </button>
-      <button text="Save Changes" onClick={() => saveToLocalStorage()}>
+      <button text="Save Changes" onClick={saveToLocalStorage}>
         Save Changes
       </button>
     </div>

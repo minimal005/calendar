@@ -1,3 +1,4 @@
+import { HOURS } from "../helpers/constants";
 import { useScheduleTable } from "../hooks/useScheduleTable";
 
 export const WeekTable = () => {
@@ -19,7 +20,7 @@ export const WeekTable = () => {
         <tr>
           <th></th>
           <th rowSpan={2}>All day</th>
-          {[0, 3, 6, 9, 12, 15, 18, 21].map((hour) => (
+          {HOURS.map((hour) => (
             <th key={hour} colSpan={3}>
               {hour.toString().padStart(2, "0")}:00
             </th>

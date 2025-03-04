@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSchedule } from "../hooks/useScheduleContext";
+import { MINUTES_IN_HOUR } from "../helpers/constants";
 
 export const useScheduleTable = () => {
   const { schedule, toggleHour, toggleAllDay } = useSchedule();
@@ -20,7 +21,7 @@ export const useScheduleTable = () => {
   }, []);
 
   const handleCellMouseDown = (day, hour) => {
-    const minutes = hour * 60;
+    const minutes = hour * MINUTES_IN_HOUR;
     const isSelected = schedule[day]?.some(
       (interval) => interval.bt <= minutes && interval.et >= minutes
     );
@@ -47,7 +48,7 @@ export const useScheduleTable = () => {
   };
 
   const isHourSelected = (day, hour) => {
-    const minutes = hour * 60;
+    const minutes = hour * MINUTES_IN_HOUR;
     return schedule[day]?.some(
       (interval) => interval.bt <= minutes && interval.et >= minutes
     );
