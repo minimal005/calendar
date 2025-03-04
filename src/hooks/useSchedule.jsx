@@ -15,7 +15,6 @@ export const ScheduleProvider = ({ children }) => {
       } else {
         const data = await fetchSchedule();
         setSchedule(data);
-        saveSchedule(data);
       }
     };
     loadSchedule();
@@ -36,7 +35,6 @@ export const ScheduleProvider = ({ children }) => {
         merged.push(curr);
       }
     }
-
     return merged;
   };
 
@@ -69,25 +67,46 @@ export const ScheduleProvider = ({ children }) => {
         updated.push({ bt: minutes, et: minutes + 59 });
       }
 
-      const newSchedule = { ...prev, [day]: mergeIntervals(updated) };
-      saveSchedule(newSchedule);
-      return newSchedule;
+      return { ...prev, [day]: mergeIntervals(updated) };
     });
   };
 
   const toggleAllDay = (day) => {
     setSchedule((prev) => {
-      const newSchedule =
-        prev[day]?.length === 24
-          ? { ...prev, [day]: [] }
-          : { ...prev, [day]: [{ bt: 0, et: 1439 }] };
-      saveSchedule(newSchedule);
-      return newSchedule;
+      return prev[day]?.length === 24
+        ? { ...prev, [day]: [] }
+        : { ...prev, [day]: [{ bt: 0, et: 1439 }] };
     });
   };
 
+  const clearSchedule = () => {
+    setSchedule({
+      mo: [],
+      tu: [],
+      we: [],
+      th: [],
+      fr: [],
+      sa: [],
+      su: [],
+    });
+    console.log("clear");
+  };
+
+  const saveToLocalStorage = () => {
+    saveSchedule(schedule);
+    console.log("save");
+  };
+
   return (
-    <ScheduleContext.Provider value={{ schedule, toggleHour, toggleAllDay }}>
+    <ScheduleContext.Provider
+      value={{
+        schedule,
+        toggleHour,
+        toggleAllDay,
+        clearSchedule,
+        saveToLocalStorage,
+      }}
+    >
       {children}
     </ScheduleContext.Provider>
   );

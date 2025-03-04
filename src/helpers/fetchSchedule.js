@@ -5,15 +5,12 @@ export const fetchSchedule = async () => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.json();
-    console.log("Fetched data:", data);
     return data || {};
-  } catch (error) {
-    console.error("Error fetching schedule:", error);
+  } catch {
     return {};
   }
 };
 
 export const saveSchedule = (newSchedule) => {
   localStorage.setItem("schedule", JSON.stringify(newSchedule));
-  console.log("Saved schedule:", newSchedule);
 };

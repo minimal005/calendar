@@ -28,7 +28,7 @@ export const WeekTable = () => {
       <thead>
         <tr>
           <th></th>
-          <th rowspan={2}>All day</th>
+          <th rowSpan={2}>All day</th>
           {[0, 3, 6, 9, 12, 15, 18, 21].map((hour) => (
             <th key={hour} colSpan={3}>
               {hour.toString().padStart(2, "0")}:00

@@ -5,7 +5,7 @@ import { ScheduleProvider } from "./hooks/useSchedule";
 function App() {
   return (
     <ScheduleProvider>
-      <WeekCalendar initialData={{}} />
+      <WeekCalendar />
     </ScheduleProvider>
   );
 }
