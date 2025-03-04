@@ -65,7 +65,7 @@ export const WeekTable = () => {
                 style={{
                   backgroundColor: isHourSelected(day, hour)
                     ? "#6e6f705f"
-                    : "#d9f2f8",
+                    : "#e3f3f8",
                   cursor: "pointer",
                 }}
               ></td>
