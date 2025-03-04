@@ -1,6 +1,6 @@
 export const fetchSchedule = async () => {
   try {
-    const response = await fetch("/schedule.json"); // ✅ Браузерний fetch, без fs
+    const response = await fetch("/schedule.json");
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

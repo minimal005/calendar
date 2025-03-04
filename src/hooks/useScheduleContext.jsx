@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { fetchSchedule, saveSchedule } from "../helpers/fetchSchedule";
+import { clearWeek } from "../helpers/constants";
+import { mergeIntervals } from "../helpers/mergeIntervals";
 
 const ScheduleContext = createContext(undefined);
 
@@ -11,7 +13,6 @@ export const ScheduleProvider = ({ children }) => {
       const storedSchedule = localStorage.getItem("schedule");
       if (storedSchedule) {
         setSchedule(JSON.parse(storedSchedule));
-        console.log("Loaded from localStorage:", JSON.parse(storedSchedule));
       } else {
         const data = await fetchSchedule();
         setSchedule(data);
@@ -20,25 +21,7 @@ export const ScheduleProvider = ({ children }) => {
     loadSchedule();
   }, []);
 
-  const mergeIntervals = (intervals) => {
-    if (intervals.length === 0) return [];
-    const sorted = [...intervals].sort((a, b) => a.bt - b.bt);
-    const merged = [sorted[0]];
-
-    for (let i = 1; i < sorted.length; i++) {
-      const prev = merged[merged.length - 1];
-      const curr = sorted[i];
-
-      if (prev.et + 1 >= curr.bt) {
-        prev.et = Math.max(prev.et, curr.et);
-      } else {
-        merged.push(curr);
-      }
-    }
-    return merged;
-  };
-
-  const toggleHour = (day, hour) => {
+  const toggleHour = (day, hour, forceState = null) => {
     setSchedule((prev) => {
       const minutes = hour * 60;
       let updated = [...(prev[day] || [])];
@@ -47,7 +30,9 @@ export const ScheduleProvider = ({ children }) => {
         (interval) => interval.bt <= minutes && interval.et >= minutes
       );
 
-      if (exists) {
+      const shouldSelect = forceState !== null ? forceState : !exists;
+
+      if (exists && !shouldSelect) {
         updated = updated.flatMap((interval) => {
           if (interval.bt <= minutes && interval.et >= minutes) {
             if (interval.bt === minutes && interval.et === minutes + 59)
@@ -63,7 +48,7 @@ export const ScheduleProvider = ({ children }) => {
           }
           return interval;
         });
-      } else {
+      } else if (!exists && shouldSelect) {
         updated.push({ bt: minutes, et: minutes + 59 });
       }
 
@@ -73,28 +58,24 @@ export const ScheduleProvider = ({ children }) => {
 
   const toggleAllDay = (day) => {
     setSchedule((prev) => {
-      return prev[day]?.length === 24
-        ? { ...prev, [day]: [] }
-        : { ...prev, [day]: [{ bt: 0, et: 1439 }] };
+      const isAllSelected = prev[day]?.some(
+        (interval) => interval.bt === 0 && interval.et === 1439
+      );
+
+      return {
+        ...prev,
+        [day]: isAllSelected ? [] : [{ bt: 0, et: 1439 }],
+      };
     });
   };
 
   const clearSchedule = () => {
-    setSchedule({
-      mo: [],
-      tu: [],
-      we: [],
-      th: [],
-      fr: [],
-      sa: [],
-      su: [],
-    });
-    console.log("clear");
+    setSchedule(clearWeek);
   };
 
   const saveToLocalStorage = () => {
+    localStorage.setItem("schedule", JSON.stringify(schedule));
     saveSchedule(schedule);
-    console.log("save");
   };
 
   return (

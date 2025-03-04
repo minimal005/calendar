@@ -1,30 +1,20 @@
-import { useState } from "react";
-import { useSchedule } from "../hooks/useSchedule";
+import { useScheduleTable } from "../hooks/useScheduleTable";
 
 export const WeekTable = () => {
-  const { schedule, toggleHour, toggleAllDay } = useSchedule();
-  const [isDragging, setIsDragging] = useState(false);
-
+  const {
+    isAllDaySelected,
+    isHourSelected,
+    handleAllDayClick,
+    handleCellMouseEnter,
+    handleCellMouseDown,
+    schedule,
+  } = useScheduleTable();
   if (!schedule || Object.keys(schedule).length === 0) {
     return <p>Loading...</p>;
   }
 
-  const handleMouseDown = (day, hour) => {
-    setIsDragging(true);
-    toggleHour(day, hour);
-  };
-
-  const handleMouseEnter = (day, hour) => {
-    if (isDragging) {
-      toggleHour(day, hour);
-    }
-  };
   return (
-    <table
-      className="table"
-      onMouseUp={() => setIsDragging(false)}
-      onMouseLeave={() => setIsDragging(false)}
-    >
+    <table className="table">
       <thead>
         <tr>
           <th></th>
@@ -53,20 +43,30 @@ export const WeekTable = () => {
         {Object.keys(schedule).map((day) => (
           <tr key={day}>
             <th>{day}</th>
-            <th onClick={() => toggleAllDay(day)}>
-              <img src="./check.png" alt="all-day" />
+            <th onClick={() => handleAllDayClick(day)}>
+              <img
+                src="./check.png"
+                alt="all-day"
+                style={{
+                  display: isAllDaySelected(day) ? "flex" : "none",
+                  cursor: "pointer",
+                }}
+              />
             </th>
             {[...Array(24)].map((_, hour) => (
               <td
                 key={hour}
-                onMouseDown={() => handleMouseDown(day, hour)}
-                onMouseEnter={() => handleMouseEnter(day, hour)}
+                onMouseDown={(e) => {
+                  if (e.button === 0) {
+                    handleCellMouseDown(day, hour);
+                  }
+                }}
+                onMouseEnter={() => handleCellMouseEnter(day, hour)}
                 style={{
-                  backgroundColor: schedule[day].some(
-                    ({ bt, et }) => bt / 60 <= hour && et / 60 > hour
-                  )
-                    ? "darkgray"
+                  backgroundColor: isHourSelected(day, hour)
+                    ? "#6e6f705f"
                     : "#d9f2f8",
+                  cursor: "pointer",
                 }}
               ></td>
             ))}

@@ -1,5 +1,4 @@
-import { useSchedule } from "../hooks/useSchedule";
-import { Button } from "./Button";
+import { useSchedule } from "../hooks/useScheduleContext";
 
 export const TableButtons = () => {
   const { clearSchedule, saveToLocalStorage } = useSchedule();
